@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hanzi Bear · Chinese character dictionary</title>
+<meta name="description" content="Look up Chinese characters by pinyin, English or German, handwriting or voice. Stroke animations and a friendly bear helper.">
+<meta name="theme-color" content="#ffd6e2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Hanzi Bear">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32.png">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><img src="img/bear/happy.webp" alt=""><span data-t="app">Hanzi Bear</span></div>
+    <button class="icon-btn" id="btnLang" aria-label="Language">EN</button>
+    <button class="icon-btn" id="btnSettings" aria-label="Settings">⚙︎</button>
+  </header>
+
+  <main class="screens">
+    <!-- search -->
+    <section class="screen active" id="scr-home">
+      <div class="search-box">
+        <span class="s-ico">🔍</span>
+        <input id="q" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-tph="ph">
+        <button class="clear-x" id="qClear" aria-label="Clear">×</button>
+      </div>
+      <div class="tools">
+        <button class="tool" id="btnWrite"><span>✍️</span><b data-t="write">Write</b></button>
+        <button class="tool mic" id="micHome"><span class="mic-ico">🎤</span><b class="mic-txt" data-t="mic">Speak</b></button>
+        <button class="tool vlang" id="vlangHome" aria-label="Voice language"><span class="flag" id="vlangFlag">EN</span></button>
+      </div>
+      <div class="pad-wrap" id="padWrap" hidden>
+        <div class="cands" id="cands"></div>
+        <div class="pad-card"><canvas id="pad"></canvas><div class="pad-hint" id="padHint" data-t="writeHint"></div></div>
+        <div class="pad-btns"><button id="padUndo" data-t="undo">Undo</button><button id="padClear" data-t="clear">Clear</button></div>
+      </div>
+      <div class="voice-status" id="voiceStatus" hidden></div>
+      <div class="results" id="results"></div>
+      <div class="home-empty" id="homeEmpty">
+        <div class="welcome"><img src="img/bear/love.webp" class="bear-img bob" alt=""><p data-t="welcome"></p></div>
+        <p class="hint" data-t="hint"></p>
+        <div class="examples" id="examples"></div>
+        <div class="recent" id="recentWrap"><h3 data-t="recent"></h3><div class="chips" id="recent"></div></div>
+      </div>
+    </section>
+
+    <!-- character -->
+    <section class="screen" id="scr-char">
+      <div class="char-top"><button class="back-btn" data-back>‹ <span data-t="back"></span></button><div class="char-tabs" id="charTabs"></div><button class="fav-btn" id="favBtn">☆</button></div>
+      <div class="char-body" id="charBody">
+        <div class="word-banner" id="wordBanner" hidden></div>
+        <div class="writer-card">
+          <div class="writer-wrap" id="writerWrap"><svg class="tzg" viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="1" y="1" width="98" height="98" fill="none" stroke="#e8a0b4" stroke-width="1.2"/><path d="M50 1V99M1 50H99M1 1L99 99M99 1L1 99" stroke="#f3c6d3" stroke-width=".6" stroke-dasharray="2 2" fill="none"/></svg><div id="writer"></div><div class="quiz-msg" id="quizMsg"></div></div>
+          <div class="stroke-info" id="strokeInfo"></div>
+          <div class="writer-btns">
+            <button id="wPlay">▶<b data-t="play"></b></button>
+            <button id="wStep">👆<b data-t="step"></b></button>
+            <button id="wQuiz">✏️<b data-t="quiz"></b></button>
+            <button id="wSay">🔊<b data-t="say"></b></button>
+          </div>
+        </div>
+        <div class="card" id="readings"></div>
+        <div class="card" id="meanings"></div>
+        <div class="card facts" id="facts"></div>
+        <div class="card" id="wordsCard"><h3 data-t="words"></h3><div id="wordsBox"></div></div>
+        <div class="card bear-explain" id="bearExplain">
+          <img src="img/bear/sing.webp" alt="" class="bear-img bob">
+          <div class="bubble" id="explainBubble"><button class="link-btn" id="explainBtn" data-t="explain"></button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- bear -->
+    <section class="screen" id="scr-bear">
+      <div class="bear-head">
+        <div class="bear-big"><img id="bearImg" src="img/bear/idle.webp" alt="" class="bear-img bob"><div class="think-dots" id="thinkDots"><i></i><i></i><i></i></div></div>
+        <div><div class="bear-name" data-t="bearTitle"></div><div class="bear-sub" data-t="bearSub"></div><div class="bear-quota" id="bearQuota"></div></div>
+      </div>
+      <div class="chat-log" id="chatLog"></div>
+      <div class="chat-chips" id="chatChips"></div>
+      <div class="chat-input">
+        <button class="mic-sm" id="micBear" aria-label="Speak">🎤</button>
+        <input id="chatQ" type="text" enterkeyhint="send" autocomplete="off" data-tph="askPh">
+        <button class="send" id="chatSend" data-t="send"></button>
+      </div>
+    </section>
+
+    <!-- saved -->
+    <section class="screen" id="scr-saved">
+      <h2 data-t="saved"></h2>
+      <div class="saved-grid" id="savedGrid"></div>
+      <p class="hint" id="savedEmpty" data-t="noSaved"></p>
+      <h2 data-t="recent"></h2>
+      <div class="chips" id="recent2"></div>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button data-tab="home" class="on"><span>🔍</span><b data-t="tabSearch"></b></button>
+    <button data-tab="bear"><span><img src="img/bear/happy.webp" alt=""></span><b data-t="tabBear"></b></button>
+    <button data-tab="saved"><span>☆</span><b data-t="tabSaved"></b></button>
+  </nav>
+
+  <div class="install" id="installTip" hidden><img src="img/icons/icon-192.png" alt=""><div id="installTxt"></div><button id="installOk"></button></div>
+  <div class="sheet-bg" id="sheetBg" hidden></div>
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-grip"></div>
+    <h2 data-t="settings"></h2>
+    <label data-t="uiLang"></label><div class="seg" id="segUi"></div>
+    <label data-t="voiceLang"></label><div class="seg" id="segVoice"></div>
+    <label data-t="meaningLang"></label><div class="seg" id="segMean"></div>
+    <label data-t="offlineTitle"></label>
+    <button class="wide" id="dlStrokes" data-t="offlineDl"></button>
+    <div class="small" id="dlInfo"></div>
+    <details><summary data-t="about"></summary><p class="small" data-t="credits"></p><p class="small" id="verInfo"></p></details>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="loading" id="loading"><img src="img/bear/think.webp" alt="" class="bear-img bob"><div>…</div></div>
+</div>
+<script src="config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/ai-config.js"></script>
+<script src="vendor/hanzi-writer.min.js"></script>
+<script src="vendor/hanzilookup.min.js"></script>
+<script src="js/dict.js"></script>
+<script src="js/hw.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/bear.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
